@@ -413,6 +413,7 @@ class Ui_Form_Login(object):
         self.frame_Signup.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_Signup.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_Signup.setObjectName("frame_Signup")
+        
         self.frame_Signup.setVisible(False)
 
         self.label_Line = QtWidgets.QLabel(parent=self.frame_Signup)
@@ -662,6 +663,8 @@ class Ui_Form_Login(object):
         self.comboBox_Day.addItems(str(i) for i in range(1, 32))
         self.comboBox_Year.addItems(str(i) for i in range(1908, 2012))
         
+        self.frame_Signup.raise_()
+        
         self.retranslateUi(Form_Login)
         QtCore.QMetaObject.connectSlotsByName(Form_Login)
 
@@ -777,7 +780,6 @@ class Ui_MainWindow(object):
         self.frame_Header.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_Header.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_Header.setObjectName("frame_Header")
-        # self.frame_Header.setVisible(False)
 
         self.pushButton_Minimize = QtWidgets.QPushButton(parent=self.frame_Header)
         self.pushButton_Minimize.setGeometry(QtCore.QRect(1120, 10, 30, 30))
@@ -922,6 +924,7 @@ class Ui_MainWindow(object):
             "background-position: center left;"
         )
         self.pushButton_Settings.setObjectName("pushButton_Settings")
+        self.pushButton_Settings.setVisible(False)
         self.formLayout.setWidget(
             4, QtWidgets.QFormLayout.ItemRole.LabelRole, self.pushButton_Settings
         )
@@ -1444,6 +1447,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
+        
         self.label_prof_last_name_header = QtWidgets.QLabel(parent=self.widget)
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -1497,23 +1501,37 @@ class Ui_MainWindow(object):
         self.label_prof_pass_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_pass_header.setObjectName("label_prof_pass_header")
         self.verticalLayout_6.addWidget(self.label_prof_pass_header)
-        self.label_prof_pass = QtWidgets.QLabel(parent=self.layoutWidget_2)
-        self.label_prof_pass.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+        self.lineEdit_prof_pass = QtWidgets.QLineEdit(parent=self.layoutWidget_2)
+        self.lineEdit_prof_pass.setStyleSheet("background-color: rgb(216, 216, 216);\n"
 "border: 1px solid #000000;\n"
 "border-radius: 5px\n"
 "")
-        self.label_prof_pass.setText("")
-        self.label_prof_pass.setObjectName("label_prof_pass")
-        self.verticalLayout_6.addWidget(self.label_prof_pass)
+        self.lineEdit_prof_pass.setText("")
+        self.lineEdit_prof_pass.setObjectName("lineEdit_prof_pass")
+        self.lineEdit_prof_pass.setMinimumHeight(31)
+        self.lineEdit_prof_pass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+        self.verticalLayout_6.addWidget(self.lineEdit_prof_pass)
         self.pushButton_chg_pass = QtWidgets.QPushButton(parent=self.frame_profile)
         self.pushButton_chg_pass.setGeometry(QtCore.QRect(330, 170, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.pushButton_chg_pass.setFont(font)
-        self.pushButton_chg_pass.setStyleSheet("background-color: rgb(216, 216, 216);\n"
-"border: 1px solid #000000;\n"
-"border-radius: 5px")
+        self.pushButton_chg_pass.setStyleSheet("QPushButton {\n"
+                                               "background-color: rgb(216, 216, 216);\n"
+                                               "border: 1px solid #000000;\n"
+                                               "border-radius: 5px;\n"
+                                               "}\n"
+                                               "QPushButton:hover {\n"
+                                               "background-color: rgb(255, 255, 255);\n"
+                                               "}\n"
+                                               "QPushButton:pressed {\n"
+                                               "background-color: rgb(192, 192, 192);\n"
+                                               "padding-left: 3px;\n"
+                                               "padding-right: 3px;\n"
+                                               "}\n"
+                                               )
         self.pushButton_chg_pass.setObjectName("pushButton_chg_pass")
+        
         self.layoutWidget_3 = QtWidgets.QWidget(parent=self.frame_profile)
         self.layoutWidget_3.setGeometry(QtCore.QRect(50, 210, 401, 71))
         self.layoutWidget_3.setObjectName("layoutWidget_3")
@@ -1548,14 +1566,15 @@ class Ui_MainWindow(object):
         self.label_prof_address_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_address_header.setObjectName("label_prof_address_header")
         self.verticalLayout_8.addWidget(self.label_prof_address_header)
-        self.label_prof_address = QtWidgets.QLabel(parent=self.layoutWidget_4)
-        self.label_prof_address.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+        self.lineEdit_prof_address = QtWidgets.QLineEdit(parent=self.layoutWidget_4)
+        self.lineEdit_prof_address.setStyleSheet("background-color: rgb(216, 216, 216);\n"
 "border: 1px solid #000000;\n"
 "border-radius: 5px\n"
 "")
-        self.label_prof_address.setText("")
-        self.label_prof_address.setObjectName("label_prof_address")
-        self.verticalLayout_8.addWidget(self.label_prof_address)
+        self.lineEdit_prof_address.setText("")
+        self.lineEdit_prof_address.setObjectName("lineEdit_prof_address")
+        self.lineEdit_prof_address.setMinimumHeight(31)
+        self.verticalLayout_8.addWidget(self.lineEdit_prof_address)
         self.layoutWidget_5 = QtWidgets.QWidget(parent=self.frame_profile)
         self.layoutWidget_5.setGeometry(QtCore.QRect(50, 450, 401, 71))
         self.layoutWidget_5.setObjectName("layoutWidget_5")
@@ -1576,9 +1595,11 @@ class Ui_MainWindow(object):
 "border-radius: 5px")
         self.comboBox_country.setObjectName("comboBox_country")
         self.verticalLayout_9.addWidget(self.comboBox_country)
+        
         self.layoutWidget_6 = QtWidgets.QWidget(parent=self.frame_profile)
-        self.layoutWidget_6.setGeometry(QtCore.QRect(260, 370, 191, 71))
+        self.layoutWidget_6.setGeometry(QtCore.QRect(340, 370, 111, 71))
         self.layoutWidget_6.setObjectName("layoutWidget_6")
+        
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.layoutWidget_6)
         self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_10.setObjectName("verticalLayout_10")
@@ -1589,17 +1610,20 @@ class Ui_MainWindow(object):
         self.label_prof_zip_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_zip_header.setObjectName("label_prof_zip_header")
         self.verticalLayout_10.addWidget(self.label_prof_zip_header)
-        self.label_prof_zip = QtWidgets.QLabel(parent=self.layoutWidget_6)
-        self.label_prof_zip.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+        self.lineEdit_prof_zip = QtWidgets.QLineEdit(parent=self.layoutWidget_6)
+        self.lineEdit_prof_zip.setStyleSheet("background-color: rgb(216, 216, 216);\n"
 "border: 1px solid #000000;\n"
 "border-radius: 5px\n"
 "")
-        self.label_prof_zip.setText("")
-        self.label_prof_zip.setObjectName("label_prof_zip")
-        self.verticalLayout_10.addWidget(self.label_prof_zip)
+        self.lineEdit_prof_zip.setText("")
+        self.lineEdit_prof_zip.setObjectName("lineEdit_prof_zip")
+        self.verticalLayout_10.addWidget(self.lineEdit_prof_zip)
+        self.lineEdit_prof_zip.setMinimumHeight(31)
+        
         self.layoutWidget_7 = QtWidgets.QWidget(parent=self.frame_profile)
-        self.layoutWidget_7.setGeometry(QtCore.QRect(50, 370, 191, 71))
+        self.layoutWidget_7.setGeometry(QtCore.QRect(200, 370, 131, 71))
         self.layoutWidget_7.setObjectName("layoutWidget_7")
+        
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.layoutWidget_7)
         self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_11.setObjectName("verticalLayout_11")
@@ -1610,16 +1634,18 @@ class Ui_MainWindow(object):
         self.label_prof_state_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_state_header.setObjectName("label_prof_state_header")
         self.verticalLayout_11.addWidget(self.label_prof_state_header)
-        self.comboBox = QtWidgets.QComboBox(parent=self.layoutWidget_7)
-        self.comboBox.setMinimumSize(QtCore.QSize(0, 31))
-        self.comboBox.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+        self.comboBox_state = QtWidgets.QComboBox(parent=self.layoutWidget_7)
+        self.comboBox_state.setMinimumSize(QtCore.QSize(0, 31))
+        self.comboBox_state.setStyleSheet("background-color: rgb(216, 216, 216);\n"
 "border: 1px solid #000000;\n"
 "border-radius: 5px")
-        self.comboBox.setObjectName("comboBox")
-        self.verticalLayout_11.addWidget(self.comboBox)
+        self.comboBox_state.setObjectName("comboBox_state")
+        self.verticalLayout_11.addWidget(self.comboBox_state)
+        
         self.layoutWidget_8 = QtWidgets.QWidget(parent=self.frame_profile)
-        self.layoutWidget_8.setGeometry(QtCore.QRect(50, 530, 111, 71))
+        self.layoutWidget_8.setGeometry(QtCore.QRect(50, 530, 131, 71))
         self.layoutWidget_8.setObjectName("layoutWidget_8")
+        
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.layoutWidget_8)
         self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
@@ -1637,9 +1663,11 @@ class Ui_MainWindow(object):
 "border-radius: 5px")
         self.comboBox_gender.setObjectName("comboBox_gender")
         self.verticalLayout_12.addWidget(self.comboBox_gender)
+        
         self.layoutWidget_9 = QtWidgets.QWidget(parent=self.frame_profile)
-        self.layoutWidget_9.setGeometry(QtCore.QRect(170, 530, 281, 71))
+        self.layoutWidget_9.setGeometry(QtCore.QRect(280, 530, 171, 71))
         self.layoutWidget_9.setObjectName("layoutWidget_9")
+        
         self.verticalLayout_13 = QtWidgets.QVBoxLayout(self.layoutWidget_9)
         self.verticalLayout_13.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_13.setObjectName("verticalLayout_13")
@@ -1650,13 +1678,19 @@ class Ui_MainWindow(object):
         self.label_prof_dob_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_dob_header.setObjectName("label_prof_dob_header")
         self.verticalLayout_13.addWidget(self.label_prof_dob_header)
-        self.label_dob = QtWidgets.QLabel(parent=self.layoutWidget_9)
-        self.label_dob.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+        self.dateEdit_dob = QtWidgets.QDateEdit(parent=self.layoutWidget_9)
+        self.dateEdit_dob.setMinimumSize(QtCore.QSize(0, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.dateEdit_dob.setFont(font)
+        self.dateEdit_dob.setStyleSheet("background-color: rgb(216, 216, 216);\n"
 "border: 1px solid #000000;\n"
 "border-radius: 5px")
-        self.label_dob.setText("")
-        self.label_dob.setObjectName("label_dob")
-        self.verticalLayout_13.addWidget(self.label_dob)
+        self.dateEdit_dob.setObjectName("dateEdit_dob")
+        self.dateEdit_dob.setDisplayFormat("MMMM dd yyyy")
+        self.verticalLayout_13.addWidget(self.dateEdit_dob)
+        self.dateEdit_dob.setReadOnly(True)
+        
         self.label_prof_header = QtWidgets.QLabel(parent=self.frame_profile)
         self.label_prof_header.setGeometry(QtCore.QRect(170, 0, 151, 41))
         font = QtGui.QFont()
@@ -1665,10 +1699,69 @@ class Ui_MainWindow(object):
         self.label_prof_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_header.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter|QtCore.Qt.AlignmentFlag.AlignTop)
         self.label_prof_header.setObjectName("label_prof_header")
-        self.label_4 = QtWidgets.QLabel(parent=self.frame_profile)
-        self.label_4.setGeometry(QtCore.QRect(20, 310, 47, 13))
-        self.label_4.setText("")
-        self.label_4.setObjectName("label_4")
+        
+        self.pushButton_prof_update = QtWidgets.QPushButton(parent=self.frame_profile)
+        self.pushButton_prof_update.setGeometry(QtCore.QRect(185, 606, 121, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.pushButton_prof_update.setFont(font)
+        self.pushButton_prof_update.setStyleSheet("QPushButton {\n"
+                                               "background-color: rgb(216, 216, 216);\n"
+                                               "border: 1px solid #000000;\n"
+                                               "border-radius: 5px;\n"
+                                               "}\n"
+                                               "QPushButton:hover {\n"
+                                               "background-color: rgb(255, 255, 255);\n"
+                                               "}\n"
+                                               "QPushButton:pressed {\n"
+                                               "background-color: rgb(192, 192, 192);\n"
+                                               "padding-left: 3px;\n"
+                                               "padding-right: 3px;\n"
+                                               "}\n"
+                                               )
+        self.pushButton_prof_update.setObjectName("pushButton_prof_update")
+        
+        self.label_prof_warning_2 = QtWidgets.QLabel(parent=self.frame_profile)
+        self.label_prof_warning_2.setGeometry(QtCore.QRect(166, 133, 231, 31))
+        self.label_prof_warning_2.setStyleSheet("color: rgb(255, 0, 0);")
+        self.label_prof_warning_2.setObjectName("label_prof_warning_2")
+        self.label_prof_warning_2.setVisible(False)
+        
+        self.label_success = QtWidgets.QLabel(parent=self.frame_profile)
+        self.label_success.setGeometry(QtCore.QRect(50, 610, 111, 21))
+        self.label_success.setStyleSheet("color: rgb(0, 255, 0);")
+        self.label_success.setObjectName("label_success")
+        self.label_success.setVisible(False)
+        
+        self.layoutWidget_12 = QtWidgets.QWidget(parent=self.frame_profile)
+        self.layoutWidget_12.setGeometry(QtCore.QRect(50, 370, 141, 71))
+        self.layoutWidget_12.setObjectName("layoutWidget_12")
+        
+        self.verticalLayout_16 = QtWidgets.QVBoxLayout(self.layoutWidget_12)
+        self.verticalLayout_16.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_16.setObjectName("verticalLayout_16")
+        self.label_prof_city_header = QtWidgets.QLabel(parent=self.layoutWidget_12)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_prof_city_header.setFont(font)
+        self.label_prof_city_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
+        self.label_prof_city_header.setObjectName("label_prof_city_header")
+        self.verticalLayout_16.addWidget(self.label_prof_city_header)
+        self.lineEdit_city = QtWidgets.QLineEdit(parent=self.layoutWidget_12)
+        self.lineEdit_city.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+"border: 1px solid #000000;\n"
+"border-radius: 5px")
+        self.lineEdit_city.setText("")
+        self.lineEdit_city.setObjectName("lineEdit_city")
+        self.verticalLayout_16.addWidget(self.lineEdit_city)
+        self.lineEdit_city.setMinimumHeight(31)
+        
+        self.frame_chg_pass = QtWidgets.QFrame(parent=self.frame_Center_Main)
+        self.frame_chg_pass.setStyleSheet("QFrame#frame_chg_pass {\n"
+"border: 1px solid #D4AF37;\n"
+"background-color: rgb(45, 45, 45);\n"
+"}")
+        
         self.frame_chg_pass = QtWidgets.QFrame(parent=self.frame_Center_Main)
         self.frame_chg_pass.setGeometry(QtCore.QRect(491, 201, 0, 261))
         self.frame_chg_pass.setStyleSheet("QFrame#frame_chg_pass {\n"
@@ -1691,14 +1784,16 @@ class Ui_MainWindow(object):
         self.label_prof_new_pass_header.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_new_pass_header.setObjectName("label_prof_new_pass_header")
         self.verticalLayout_14.addWidget(self.label_prof_new_pass_header)
-        self.label_prof_new_pass = QtWidgets.QLabel(parent=self.layoutWidget_10)
-        self.label_prof_new_pass.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+        self.lineEdit_prof_new_pass = QtWidgets.QLineEdit(parent=self.layoutWidget_10)
+        self.lineEdit_prof_new_pass.setStyleSheet("background-color: rgb(216, 216, 216);\n"
 "border: 1px solid #000000;\n"
 "border-radius: 5px\n"
 "")
-        self.label_prof_new_pass.setText("")
-        self.label_prof_new_pass.setObjectName("label_prof_new_pass")
-        self.verticalLayout_14.addWidget(self.label_prof_new_pass)
+        self.lineEdit_prof_new_pass.setText("")
+        self.lineEdit_prof_new_pass.setObjectName("lineEdit_prof_new_pass")
+        self.lineEdit_prof_new_pass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+        self.lineEdit_prof_new_pass.setMinimumHeight(31)
+        self.verticalLayout_14.addWidget(self.lineEdit_prof_new_pass)
         self.layoutWidget_11 = QtWidgets.QWidget(parent=self.frame_chg_pass)
         self.layoutWidget_11.setGeometry(QtCore.QRect(10, 90, 271, 71))
         self.layoutWidget_11.setObjectName("layoutWidget_11")
@@ -1712,27 +1807,78 @@ class Ui_MainWindow(object):
         self.label_prof_new_pass_header_2.setStyleSheet("color: rgba(255, 255, 255, 0.7);")
         self.label_prof_new_pass_header_2.setObjectName("label_prof_new_pass_header_2")
         self.verticalLayout_15.addWidget(self.label_prof_new_pass_header_2)
-        self.label_prof_new_pass_2 = QtWidgets.QLabel(parent=self.layoutWidget_11)
-        self.label_prof_new_pass_2.setStyleSheet("background-color: rgb(216, 216, 216);\n"
+        self.lineEdit_prof_new_pass_2 = QtWidgets.QLineEdit(parent=self.layoutWidget_11)
+        self.lineEdit_prof_new_pass_2.setStyleSheet("background-color: rgb(216, 216, 216);\n"
 "border: 1px solid #000000;\n"
 "border-radius: 5px\n"
 "")
-        self.label_prof_new_pass_2.setText("")
-        self.label_prof_new_pass_2.setObjectName("label_prof_new_pass_2")
-        self.verticalLayout_15.addWidget(self.label_prof_new_pass_2)
+        self.lineEdit_prof_new_pass_2.setText("")
+        self.lineEdit_prof_new_pass_2.setObjectName("lineEdit_prof_new_pass_2")
+        self.lineEdit_prof_new_pass_2.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+        self.lineEdit_prof_new_pass_2.setMinimumHeight(31)
+        self.verticalLayout_15.addWidget(self.lineEdit_prof_new_pass_2)
         self.pushButton_chg_submit = QtWidgets.QPushButton(parent=self.frame_chg_pass)
         self.pushButton_chg_submit.setGeometry(QtCore.QRect(80, 170, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.pushButton_chg_submit.setFont(font)
-        self.pushButton_chg_submit.setStyleSheet("background-color: rgb(216, 216, 216);\n"
-"border: 1px solid #000000;\n"
-"border-radius: 5px")
+        self.pushButton_chg_submit.setStyleSheet("QPushButton {\n"
+                                               "background-color: rgb(216, 216, 216);\n"
+                                               "border: 1px solid #000000;\n"
+                                               "border-radius: 5px;\n"
+                                               "}\n"
+                                               "QPushButton:hover {\n"
+                                               "background-color: rgb(255, 255, 255);\n"
+                                               "}\n"
+                                               "QPushButton:pressed {\n"
+                                               "background-color: rgb(192, 192, 192);\n"
+                                               "padding-left: 3px;\n"
+                                               "padding-right: 3px;\n"
+                                               "}\n"
+                                               )
         self.pushButton_chg_submit.setObjectName("pushButton_chg_submit")
-        self.label_3 = QtWidgets.QLabel(parent=self.frame_chg_pass)
-        self.label_3.setGeometry(QtCore.QRect(10, 220, 269, 31))
-        self.label_3.setText("")
-        self.label_3.setObjectName("label_3")
+        
+        self.label_prof_warning = QtWidgets.QLabel(parent=self.frame_chg_pass)
+        self.label_prof_warning.setGeometry(QtCore.QRect(10, 220, 269, 31))
+        self.label_prof_warning.setStyleSheet("")
+        self.label_prof_warning.setText("")
+        self.label_prof_warning.setObjectName("label_prof_warning")
+        self.label_prof_warning.setVisible(False)
+        
+        self.comboBox_state.addItems([
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", 
+    "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", 
+    "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", 
+    "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", 
+    "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", 
+    "New Hampshire", "New Jersey", "New Mexico", "New York", 
+    "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", 
+    "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", 
+    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", 
+    "West Virginia", "Wisconsin", "Wyoming", 
+    "Armed Forces Americas (AA)", 
+    "Armed Forces Europe (AE)", 
+    "Armed Forces Pacific (AP)"
+])
+        
+        self.comboBox_country.addItems([
+    "United States", "Canada", "Mexico", "Cuba", "Puerto Rico", 
+    "Guatemala", "Belize", "Costa Rica", "El Salvador", "Honduras", 
+    "Nicaragua", "Panama", "Argentina", "Brazil", "Chile", "Colombia", 
+    "Ecuador", "Paraguay", "Peru", "Uruguay", "Venezuela", "Australia", 
+    "New Zealand", "United Kingdom", "Ireland", "France", "Germany", 
+    "Italy", "Spain", "Portugal", "Netherlands", "Belgium", "Switzerland", 
+    "Austria", "Sweden", "Norway", "Denmark", "Finland", "Iceland", 
+    "Russia", "China", "Japan", "South Korea", "India", "Pakistan", 
+    "Bangladesh", "Sri Lanka", "Nepal", "Maldives", "Indonesia", 
+    "Thailand", "Vietnam", "Philippines", "Malaysia", "Singapore", 
+    "South Africa", "Egypt", "Nigeria", "Kenya", "Ethiopia", "Israel", 
+    "Saudi Arabia", "United Arab Emirates", "Turkey", "Iran", "Iraq", 
+    "Argentina", "Brazil", "Chile", "Cuba", "Dominican Republic", 
+    "Jamaica", "Trinidad and Tobago", "Haiti"
+])
+        
+        self.comboBox_gender.addItems(["Male", "Female", "Custom"])
 
         self.frame_Center_Main.raise_()
         self.textBrowser.raise_()
@@ -1858,6 +2004,11 @@ class Ui_MainWindow(object):
         self.label_prof_gender_header.setText(_translate("MainWindow", "Gender"))
         self.label_prof_dob_header.setText(_translate("MainWindow", "Date of Birth"))
         self.label_prof_header.setText(_translate("MainWindow", "My profile"))
+        self.pushButton_prof_update.setText(_translate("MainWindow", "Update"))
+        self.label_prof_warning_2.setText(_translate("MainWindow", "Incorrect password!"))
+        self.label_success.setText(_translate("MainWindow", "Updated Successfully!"))
+        self.label_prof_city_header.setText(_translate("MainWindow", "City"))
+        self.pushButton_prof_update.setText(_translate("MainWindow", "Update"))
         self.label_prof_new_pass_header.setText(_translate("MainWindow", "New Password"))
         self.label_prof_new_pass_header_2.setText(_translate("MainWindow", "Confirm Password"))
         self.pushButton_chg_submit.setText(_translate("MainWindow", "Submit"))

@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtCore import *
 from PyQt6.QtGui import QMouseEvent, QStandardItem, QStandardItemModel, QPixmap
 from gui import *
-from typing import List, Optional
+from typing import *
 import csv, re
 
 
@@ -36,6 +36,7 @@ class Logic:
         self.window_main = QMainWindow()
 
         self.current_filter = ""
+        self.email = ""
 
         self.ui_login.setupUi(self.window_login)
         self.ui_main.setupUi(self.window_main)
@@ -131,6 +132,9 @@ class Logic:
         self.ui_main.pushButton_Home.clicked.connect(self.display_home)
         self.ui_main.pushButton_Settings.clicked.connect(self.display_settings)
         self.ui_main.pushButton_clear.clicked.connect(self.clear_filter)
+        self.ui_main.pushButton_chg_pass.clicked.connect(self.change_password)
+        self.ui_main.pushButton_chg_submit.clicked.connect(self.submit_changes)
+        self.ui_main.pushButton_prof_update.clicked.connect(self.update_profile)
 
         self.ui_main.checkBox_Legends.toggled.connect(self.cb_toggle_uni)
         self.ui_main.checkBox_Canon.toggled.connect(self.cb_toggle_uni)
@@ -228,21 +232,27 @@ class Logic:
             FileNotFoundError: If the login credentials file is missing.
             Exception: For any other errors during the validation process.
         """
-        email = self.ui_login.lineEdit_Email.text().strip()
+        self.email = self.ui_login.lineEdit_Email.text().strip()
         password = self.ui_login.lineEdit_Pass.text().strip()
         
 
         try:
             reader = self.read_csv("login_credentials.csv")
             for row in reader:
-                if row["email"] == email:
+                if row["email"] == self.email:
                     if row["password"] == password:
                         print(
                             f"Current window: {self.current_window.__class__.__name__ if self.current_window else 'None'}"
                         )
 
-                        first_name = row.get("first", "Unknown")  # Default to "Unknown" if not found
-                        last_name = row.get("last", "Unknown") 
+                        first_name = row.get("first", "")  # Default to "Unknown" if not found
+                        last_name = row.get("last", "") 
+                        address = row.get("address", "")
+                        state = row.get("state", "")
+                        city = row.get("city", "")
+                        zipcode = row.get("zip", "")
+                        gender = row.get("gender", "")
+                        dob = row.get("birthday", "") 
                         self.ui_main.label_Footer_Text_Center.setText(f"App Version: {self.app_version} | User: {first_name} {last_name}")
                         # Close the current window if it's the login window
                         if self.current_window == self.window_login:
@@ -255,6 +265,16 @@ class Logic:
                         self.ui_login.lineEdit_Pass.clear()
                         self.ui_login.lineEdit_Email.clear()
                         self.ui_login.lineEdit_Email.setFocus()
+                        self.ui_main.label_prof_first_name.setText(first_name)
+                        self.ui_main.label_prof_last_name.setText(last_name)
+                        self.ui_main.label_prof_email.setText(self.email)
+                        self.ui_main.lineEdit_prof_address.setText(address)
+                        self.ui_main.comboBox_state.setCurrentText(state)
+                        self.ui_main.lineEdit_city.setText(city)
+                        self.ui_main.lineEdit_prof_zip.setText(zipcode)
+                        self.ui_main.comboBox_gender.setCurrentText(gender)
+                        self.ui_main.dateEdit_dob.setDate(QDate.fromString(dob, "MMMM dd yyyy"))
+                        
                         return
                     else:
                         self.ui_login.label_MainWarning.setText(
@@ -283,12 +303,13 @@ class Logic:
         self.ui_login.lineEdit_SU_Email.clear()
         self.ui_login.lineEdit_SU_Pass.clear()
         self.ui_login.lineEdit_SU_Pass_Conf.clear()
-        self.ui_login.comboBox_Day.clear()
-        self.ui_login.comboBox_Month.clear()
-        self.ui_login.comboBox_Year.clear()
+        self.ui_login.comboBox_Day.setCurrentIndex(0)
+        self.ui_login.comboBox_Month.setCurrentIndex(0)
+        self.ui_login.comboBox_Year.setCurrentIndex(0)
         self.ui_login.radioButton_Female.setChecked(False)
         self.ui_login.radioButton_Male.setChecked(False)
         self.ui_login.radioButton_Custom.setChecked(False)
+        self.ui_login.label_Warning.clear()
 
     def complete_signup(self) -> None:
         """Completes the signup process by validating and storing the user's credentials."""
@@ -310,7 +331,7 @@ class Logic:
         else:
             gender = None
 
-        birthday = f"{day}/{month}/{year}"  # Combine birthday into desired format
+        birthday = f"{month} {day} {year}"  # Combine birthday into desired format
 
         # Check for duplicate email
         if not (
@@ -404,12 +425,13 @@ class Logic:
             self.ui_login.lineEdit_SU_Email.clear()
             self.ui_login.lineEdit_SU_Pass.clear()
             self.ui_login.lineEdit_SU_Pass_Conf.clear()
-            self.ui_login.comboBox_Day.clear()
-            self.ui_login.comboBox_Month.clear()
-            self.ui_login.comboBox_Year.clear()
+            self.ui_login.comboBox_Day.setCurrentIndex(0)
+            self.ui_login.comboBox_Month.setCurrentIndex(0)
+            self.ui_login.comboBox_Year.setCurrentIndex(0)
             self.ui_login.radioButton_Female.setChecked(False)
             self.ui_login.radioButton_Male.setChecked(False)
             self.ui_login.radioButton_Custom.setChecked(False)
+            self.ui_login.label_Warning.clear()
 
         except Exception as e:
             self.ui_login.label_Warning.setText(f"An error occurred: {e}")
@@ -486,13 +508,17 @@ class Logic:
         """Applies the selected universe filter to the table."""
         legends_checked = self.ui_main.checkBox_Legends.isChecked()
         canon_checked = self.ui_main.checkBox_Canon.isChecked()
+        
+        filter_condition = None
 
         if canon_checked:
             filter_condition = r"Canon"
         elif legends_checked:
             filter_condition = r"Legend"
 
-        self.uni_filter(filter_condition)
+        if filter_condition:
+            self.uni_filter(filter_condition)
+
 
     def cb_toggle_novel(self) -> None:
         """Applies the selected novel filter to the table."""
@@ -613,15 +639,26 @@ class Logic:
         self.filter_proxy_model.setFilterKeyColumn(-1)
         self.filter_proxy_model.invalidateFilter()
 
-        self.ui_main.checkBox_Canon.setAutoExclusive(False)
-        self.ui_main.checkBox_Legends.setAutoExclusive(False)
+        # self.ui_main.checkBox_Canon.setAutoExclusive(False)
+        # self.ui_main.checkBox_Legends.setAutoExclusive(False)
 
+        # self.ui_main.checkBox_Canon.setChecked(False)
+        # self.ui_main.checkBox_Legends.setChecked(False)
+
+        # self.ui_main.checkBox_Canon.setAutoExclusive(True)
+        # self.ui_main.checkBox_Legends.setAutoExclusive(True)
+
+        button_group = self.ui_main.buttonGroup_Universe
+
+        button_group.setExclusive(False)
+
+        # Uncheck the checkboxes
         self.ui_main.checkBox_Canon.setChecked(False)
         self.ui_main.checkBox_Legends.setChecked(False)
 
-        self.ui_main.checkBox_Canon.setAutoExclusive(True)
-        self.ui_main.checkBox_Legends.setAutoExclusive(True)
-
+        # Re-enable the exclusive behavior
+        button_group.setExclusive(True)
+        
         self.ui_main.checkBox_GB.setChecked(False)
         self.ui_main.checkBox_JRA.setChecked(False)
         self.ui_main.checkBox_NA.setChecked(False)
@@ -659,6 +696,7 @@ class Logic:
         self.load_table()
         self.top_carrot_clicked()
         self.ui_main.pushButton_Side_Menu_Carrot.setVisible(True)
+        
 
     def side_carrot_clicked(self) -> None:
         """
@@ -703,6 +741,14 @@ class Logic:
 
         self.ui_main.pushButton_Side_Menu_Carrot.setGeometry(new_button_geometry)
         self.ui_main.pushButton_Side_Menu_Carrot.setText(new_button_text)
+        
+        if self.ui_main.frame_Logo.height() == 59:
+            self.ui_main.frame_Logo.setGeometry(1, 1, 1194, 0)
+            self.ui_main.pushButton_Top_Menu_Carrot.setGeometry(582, 0, 30, 30)
+            self.ui_main.pushButton_Top_Menu_Carrot.setText("⏷")
+            
+        if self.ui_main.frame_Menu_Left.width() == 131:
+            self.ui_main.frame_Menu_Left.setGeometry(0, 50, 41, 641)    
 
     def top_carrot_clicked(self) -> None:
         """
@@ -735,6 +781,14 @@ class Logic:
 
         self.ui_main.pushButton_Top_Menu_Carrot.setGeometry(new_button_geometry)
         self.ui_main.pushButton_Top_Menu_Carrot.setText(new_button_text)
+        
+        if self.ui_main.frame_SW_Filter_Menu.width() == 233:
+            self.ui_main.frame_SW_Filter_Menu.setGeometry(961, 2, 0, 639)
+            self.ui_main.pushButton_Side_Menu_Carrot.setGeometry(1163, 300, 30, 30)
+            self.ui_main.pushButton_Side_Menu_Carrot.setText("⏴")
+            
+        if self.ui_main.frame_Menu_Left.width() == 131:
+            self.ui_main.frame_Menu_Left.setGeometry(0, 50, 41, 641)    
 
     def display_help(self) -> None:
         """
@@ -929,6 +983,16 @@ class Logic:
         )
         self.animate.setEasingCurve(QEasingCurve.Type.InOutQuart)
         self.animate.start()
+        
+        if self.ui_main.frame_SW_Filter_Menu.width() == 233:
+            self.ui_main.frame_SW_Filter_Menu.setGeometry(961, 2, 0, 639)
+            self.ui_main.pushButton_Side_Menu_Carrot.setGeometry(1163, 300, 30, 30)
+            self.ui_main.pushButton_Side_Menu_Carrot.setText("⏴")
+            
+        if self.ui_main.frame_Logo.height() == 59:
+            self.ui_main.frame_Logo.setGeometry(1, 1, 1194, 0)
+            self.ui_main.pushButton_Top_Menu_Carrot.setGeometry(582, 0, 30, 30)
+            self.ui_main.pushButton_Top_Menu_Carrot.setText("⏷")    
 
     def display_account(self) -> None:
         """Displays the account settings page."""
@@ -952,10 +1016,210 @@ class Logic:
         )
         self.animate.setEasingCurve(QEasingCurve.Type.InOutQuart)
         self.animate.start()
+        
+        if self.ui_main.frame_Menu_Left.width() == 131:
+            self.ui_main.frame_Menu_Left.setGeometry(0, 50, 41, 641)
+    def update_profile(self) -> None:
+        """Updates the profile information in the account settings page."""
+        credentials: List[Dict[str, str]] = self.read_csv('login_credentials.csv')
+        
+        address = self.ui_main.lineEdit_prof_address.text()
+        city = self.ui_main.lineEdit_city.text()
+        state = self.ui_main.comboBox_state.currentText()
+        zip = self.ui_main.lineEdit_prof_zip.text()
+        country = self.ui_main.comboBox_country.currentText()
+        gender = self.ui_main.comboBox_gender.currentText()
+        
+        
+        user_found: bool = False
+        for record in credentials:
+            if record['email'] == self.email :
+                user_found: bool = True
+                record['address'] = address
+                record['city'] = city
+                record['state'] = state
+                record['zip'] = zip
+                record['country'] = country
+                record['gender'] = gender
+                break
+            
+        if user_found:
+                if not credentials:
+                    raise Exception("Data to write is empty")
+                try:
+                    with open('login_credentials.csv', mode='w', newline='', encoding='utf-8') as file:
+                        fieldnames = credentials[0].keys()
+                        writer = csv.DictWriter(file, fieldnames=fieldnames)
 
+                        writer.writeheader()
+                        writer.writerows(credentials)
+                        self.ui_main.label_success.setVisible(True)
+                        QTimer.singleShot(3000, lambda: self.ui_main.label_success.setVisible(False))
+
+                except Exception as e:
+                    raise Exception(f"Error writing to file 'login_credentials.csv': {e}")
+
+        else:
+            raise Exception("User not found in credentials.")
+    def change_password(self) -> None:
+        """Displays the change password page if the user enters the correct password.
+    
+        This function checks if the user has entered the correct password by comparing the
+        entered password with the one associated with the email stored in the CSV file 
+        ('login_credentials.csv'). If the entered password is correct:
+            - The password change menu will be shown by expanding the menu frame.
+            - The warning label (label_prof_warning_2) will be hidden.
+        If the password is incorrect:
+            - The warning label will be shown to notify the user of the failed attempt.
+        
+        It uses the email stored in `self.email` (set during login) to find the associated 
+        password in the CSV file. The CSV file should contain two columns: 'email' and 'password'."""
+
+        credentials: List[Dict[str, str]] = self.read_csv('login_credentials.csv')
+
+        entered_password: str = self.ui_main.lineEdit_prof_pass.text()
+
+        user_found: bool = False
+        for record in credentials:
+            if record['email'] == self.email and record['password'] == entered_password:
+                user_found: bool = True
+                break
+        
+        if user_found:
+            width: int = self.ui_main.frame_chg_pass.width()
+
+            newWidth: int = 291 if width == 0 else 0
+
+            self.animate = QPropertyAnimation(self.ui_main.frame_chg_pass, b"geometry")
+            self.animate.setDuration(250)
+            self.animate.setStartValue(self.ui_main.frame_chg_pass.geometry())
+            self.animate.setEndValue(
+                QRect(
+                    self.ui_main.frame_chg_pass.x(),
+                    self.ui_main.frame_chg_pass.y(),
+                    newWidth,
+                    self.ui_main.frame_chg_pass.height(),
+                )
+            )
+            self.animate.setEasingCurve(QEasingCurve.Type.InOutQuart)
+            self.animate.start()
+
+            self.ui_main.label_prof_warning_2.setVisible(False)
+        else:
+            self.ui_main.label_prof_warning_2.setVisible(True)
+    
+    def submit_changes(self) -> None:
+        """Submits the password changes. If the new passwords match, the password is updated 
+        in the login_credentials.csv file. The new password is saved only if the user 
+        enters the correct current password.
+        
+        This function also validates that the new passwords match, then updates the password 
+        of the user identified by their email stored in `self.email` in the CSV file.
+
+        Raises:
+            Exception: If an error occurs while writing the CSV file.
+        """
+        new_pass1 = self.ui_main.lineEdit_prof_new_pass.text()
+        new_pass2 = self.ui_main.lineEdit_prof_new_pass_2.text()
+        
+        if new_pass1 == new_pass2:
+            credentials: List[Dict[str, str]] = self.read_csv('login_credentials.csv')
+
+            user_found: bool = False
+            for record in credentials:
+                if record['email'] == self.email:
+                    record['password'] = new_pass1
+                    user_found = True
+                    break
+
+            if user_found:
+                if not credentials:
+                    raise Exception("Data to write is empty")
+                try:
+                    with open('login_credentials.csv', mode='w', newline='', encoding='utf-8') as file:
+                        fieldnames = credentials[0].keys()
+                        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+                        writer.writeheader()
+                        writer.writerows(credentials)
+
+                except Exception as e:
+                    raise Exception(f"Error writing to file 'login_credentials.csv': {e}")
+
+                self.ui_main.label_prof_warning.setText("Password changed successfully!")
+                self.ui_main.label_prof_warning.setStyleSheet("color: green;")
+                self.ui_main.label_prof_warning.setVisible(True)
+                self.ui_main.lineEdit_prof_new_pass.clear()
+                self.ui_main.lineEdit_prof_new_pass_2.clear()
+                QTimer.singleShot(2000, self.close_change_pass)
+            else:
+                self.ui_main.label_prof_warning.setText("User not found.")
+                self.ui_main.label_prof_warning.setStyleSheet("color: red;")
+                self.ui_main.label_prof_warning.setVisible(True)
+        else:
+            self.ui_main.label_prof_warning.setText("Passwords do not match.")
+            self.ui_main.label_prof_warning.setStyleSheet("color: red;")
+            self.ui_main.label_prof_warning.setVisible(True)
+        
+    def close_change_pass(self) -> None:
+        self.ui_main.frame_chg_pass.setGeometry(491, 201, 0, 261)
+    
+        self.ui_main.label_prof_warning.setVisible(False)
     def display_home(self) -> None:
-        """Displays the home page."""
-        pass
+        """
+        Displays the privacy page or toggles the visibility of the Splash page and table view.
+
+        This function:
+        - Checks the current HTML file being displayed and determines whether to load the
+        Splash page or show/hide the text browser and table view based on the current state.
+        - When the Splash page is being shown for the first time, it updates the HTML file path
+        to "PrivacyPolicy.html" and loads it in the text browser.
+        - When the Splash page is already visible, it hides the text browser and shows the table view.
+        - If the table view is visible, it hides the table view and shows the Splash page.
+
+        It handles visibility for both the text browser and the table view and ensures the correct
+        HTML content is loaded.
+        """
+        if self.ui_main.frame_profile.width() == 491:
+            self.ui_main.frame_profile.setGeometry(0, 0, 0, 641)
+            
+        if (
+            self.html_file_path == "PrivacyPolicy.html"
+            or self.html_file_path == "Help.html"
+            or self.html_file_path == "TermsOfService.html"
+        ) and self.ui_main.textBrowser.isVisible():
+            self.html_file_path = "Splash.html"
+            self.load_text_browser()
+            self.ui_main.textBrowser.setVisible(True)
+        elif (
+            self.ui_main.textBrowser.isVisible()
+            and self.html_file_path == "Splash.html"
+        ):
+            self.ui_main.textBrowser.setVisible(True)
+            if self.ui_main.pushButton_Side_Menu_Carrot.isVisible():
+                self.ui_main.tableView.setVisible(True)
+        else:
+            self.html_file_path = "Splash.html"
+            self.ui_main.textBrowser.setVisible(True)
+            self.load_text_browser()
+            if self.ui_main.tableView.isVisible():
+                self.ui_main.tableView.setVisible(False)
+
+        print(f"Current HTML file: {self.html_file_path}")
+        print(f"text browser visibility: {self.ui_main.textBrowser.isVisible()}")
+        
+        self.ui_main.textBrowser.update()
+        self.ui_main.textBrowser.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
+        self.ui_main.textBrowser.setMinimumHeight(300)
+        
+        if self.ui_main.textBrowser.toPlainText().strip() == "":
+            print("No content in textBrowser to scroll.")
+        else:
+            print("Content in textBrowser ready for scrolling.")
+            
+        if self.ui_main.frame_Menu_Left.width() == 131:
+            self.ui_main.frame_Menu_Left.setGeometry(0, 50, 41, 641)
+        
 
     def display_settings(self) -> None:
         """Displays the settings page."""
